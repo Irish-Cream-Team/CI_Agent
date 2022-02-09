@@ -1,8 +1,9 @@
 import os
 import json
-path = '/home/ofek/Documents/aramy/Inside_CI/Yesodot/TeamName/ProjectName/Images'
+path = '/home/ofek/Documents/CI_Agent/Yesodot/TeamName/ProjectName/Images'
 projectName = 'Halbana'
 projectOrganization = 'yesodot'
+
 filePath = 'foo.txt'
 info = {'path': path, 'projectName': projectName,
         'projectOrganization': projectOrganization}

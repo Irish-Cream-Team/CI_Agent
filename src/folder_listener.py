@@ -4,10 +4,8 @@ import time
 from watchdog.observers import Observer
 from watchdog.events import RegexMatchingEventHandler
 from agent import on_create
+from config import config
 
-def create_observer():
-    # Initialize Observer
-    return Observer()
 
 def create_event_handler():
     # create the event handler
@@ -18,14 +16,11 @@ def create_event_handler():
     return my_event_handler
 
 
-if __name__ == "__main__":
-
-    # Set format for displaying path
-    path = '/home/ofek/Documents/aramy/Inside_CI/Yesodot/Unorganize'
+def start_listener(path):
     event_handler = create_event_handler()
     event_handler.on_created = on_create
-    
-    observer = create_observer()
+
+    observer = Observer()
     observer.schedule(event_handler, path, recursive=True)
 
     # Start the observer
@@ -37,3 +32,9 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
+
+
+if __name__ == "__main__":
+    path = config["input_folder"]
+    # Set format for displaying path
+    start_listener(path)
