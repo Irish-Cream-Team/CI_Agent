@@ -1,0 +1,5 @@
+watchdog
+python-dotenv
+json
+requests
+shutil

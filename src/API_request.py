@@ -1,10 +1,11 @@
 import json
 import requests
+from config import config
 
-url = "https://dev.azure.com"
 payload = {}
 
-token = 'RmlzaGVycy01MTo3Y2dxbGNlZmhpMzJmdnN6djV4eHJydGRreHJkbGw1eWphZDRndGprcGYyZGZnbHQ1cHJx'
+token = config["token"]
+url = config["url"]
 
 
 def getProjectPipelines(base_url, organization, project):
