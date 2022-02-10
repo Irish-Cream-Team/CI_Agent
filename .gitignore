@@ -1,4 +1,4 @@
 .env
 .vscode/*
-agent_venv/
+
 agent/__pycache__/
