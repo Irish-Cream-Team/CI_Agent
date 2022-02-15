@@ -1,21 +1,17 @@
 import os
-import shutil
-import json
-
-from API_request import API_request
-
-def on_create(event):
-
-    main(event.src_path)
+from folder_listener import start_listener
 
 
-def main(filePath):
-    info  = os.getxattr(filePath, 'user.info').decode("utf-8")
-    info = json.loads(info)
-    path = info.get('path')
-    projectName = info.get('projectName')
-    projectOrganization = info.get('projectOrganization')
-    shutil.move(filePath, path)
-    print(f'File moved to {path}')
-    API_request(projectOrganization, projectName)
+def create_folder(folder_path):
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
 
+
+def main():
+    folderToListen = "./Yesodot/Unorganize"
+    create_folder(folderToListen)
+    start_listener(folderToListen)
+
+
+if __name__ == "__main__":
+    main()
