@@ -1,12 +1,13 @@
 import os
 import json
-path = '/home/ofek/Documents/CI_Agent/Yesodot/TeamName/ProjectName/Images'
-projectName = 'Halbana'
-projectOrganization = 'yesodot'
+TeamName = 'TeamName'
+AzureProjectName = 'Halbana'
+AzureProjectOrganization = 'yesodot'
 
 filePath = 'foo.txt'
-info = {'path': path, 'projectName': projectName,
-        'projectOrganization': projectOrganization}
+info = {'TeamName': TeamName, 
+        'AzureProjectName': AzureProjectName,
+        'AzureProjectOrganization': AzureProjectOrganization}
 
 
 def dict_to_binary(dict):

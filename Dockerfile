@@ -11,4 +11,4 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-CMD ["python3","src/folder_listener.py"]
+CMD ["python","src/agent.py"]

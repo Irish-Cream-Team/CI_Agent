@@ -3,9 +3,7 @@
 import time
 from watchdog.observers import Observer
 from watchdog.events import RegexMatchingEventHandler
-from agent import on_create
-from config import config
-
+from file_handler import on_create
 
 def create_event_handler():
     # create the event handler
@@ -33,8 +31,3 @@ def start_listener(path):
         observer.stop()
     observer.join()
 
-
-if __name__ == "__main__":
-    path = config["input_folder"]
-    # Set format for displaying path
-    start_listener(path)

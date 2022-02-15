@@ -1,27 +1,29 @@
 import json
 import requests
 from config import config
+from log import config_logger
 
+logger = config_logger()
 payload = {}
 
 token = config["token"]
 url = config["url"]
 
 
-def getProjectPipelines(base_url, organization, project):
+def get_project_pipelines(base_url, organization, project):
     url = f'{base_url}/{organization}/{project}/_apis/pipelines?api-version=6.0-preview.1'
     headers = {'Authorization': f'Basic {token}'}
     return requests.request("GET", url, headers=headers, data=payload).json().get('value')
 
 
-def findPipelineByName(pipelines, name):
+def find_pipeline_by_name(pipelines, name):
     for pipeline in pipelines:
         if pipeline.get('name') == name:
             return pipeline
     return None
 
 
-def runPipeLine(base_url, organization, project, pipelineId):
+def send_azure_run_requset(base_url, organization, project, pipelineId):
     payload = json.dumps({
         "resources": {
             "repositories": {
@@ -36,7 +38,13 @@ def runPipeLine(base_url, organization, project, pipelineId):
     url = f'{base_url}/{organization}/{project}/_apis/pipelines/{pipelineId}/runs?api-version=6.0-preview.1'
     return requests.request("POST", url, headers=headers, data=payload)
 
-def API_request(projectOrganization,projectName):
-    pipelines = getProjectPipelines(url, projectOrganization, projectName)
-    pipeline = findPipelineByName(pipelines, 'CI')
-    return runPipeLine(url, projectOrganization, projectName, pipeline.get('id')).status_code == 200
+
+def run_ci_pipline(projectOrganization, projectName):
+    logger.info('start API request process')
+    pipelines = get_project_pipelines(url, projectOrganization, projectName)
+    pipeline = find_pipeline_by_name(pipelines, 'CI')
+    if send_azure_run_requset(url, projectOrganization, projectName, pipeline.get('id')).status_code == 200:
+        logger.info('CI pipeline run successfully')
+        logger.info('API request process finished')
+    else:
+        logger.critical('CI pipeline run failed')
