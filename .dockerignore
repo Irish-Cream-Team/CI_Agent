@@ -1,0 +1,4 @@
+.*
+agent_venv/*
+*ocker*
+*.yaml

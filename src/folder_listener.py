@@ -3,7 +3,8 @@
 import time
 from watchdog.observers import Observer
 from watchdog.events import RegexMatchingEventHandler
-from file_handler import on_create
+from file_handler import file_handler_main
+
 
 def create_event_handler():
     # create the event handler
@@ -16,7 +17,7 @@ def create_event_handler():
 
 def start_listener(path):
     event_handler = create_event_handler()
-    event_handler.on_created = on_create
+    event_handler.on_created = file_handler_main
 
     observer = Observer()
     observer.schedule(event_handler, path, recursive=True)
@@ -30,4 +31,3 @@ def start_listener(path):
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
-

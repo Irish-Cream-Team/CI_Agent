@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ci-agent-dep
+spec:
+  selector:
+    matchLabels:
+      app: ci-agent
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: ci-agent
+    spec:
+      imagePullSecrets:
+      - name: devopsacr
+  
+      containers:
+      - name: nginx
+        image: yesodotdevops.azurecr.io/halbana/ci_agent:0.1.0
+        ports:
+        - containerPort: 80  
+        
+        volumeMounts:
+        - mountPath: /app/Yesodot/Unorganize
+          name: images
+
+        - mountPath: /app/Yesodot/TeamName
+          name: test
+      
+      volumes:
+      - name: images
+        azureFile:
+          secretName: azure-volume
+          shareName: devops/images
+          readOnly: false
+      - name: test
+        azureFile:
+          secretName: azure-volume
+          shareName: devops/test
+          readOnly: false

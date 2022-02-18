@@ -29,8 +29,9 @@ def move_file(src_file_path, dest_file_path):
         logger.critical(f'File failed to move to {dest_file_path}')
 
 
-def on_create(event):
+def file_handler_main(event):
     logger.info('new file detected, start file handler process')
+    
     fileMetadata = get_file_metadata(event.src_path)
 
     azureProjectName = fileMetadata.get('AzureProjectName')
