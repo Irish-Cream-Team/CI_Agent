@@ -1,4 +1,5 @@
 import json
+from typing import Dict, List
 
 import requests
 
@@ -8,17 +9,17 @@ from log import config_logger
 logger = config_logger()
 payload = {}
 
-token = str(config["token"])
-url = str(config["url"])
+token = config["token"]
+url = config["url"]
 
 
-def get_project_pipelines(base_url: str, organization: str, project: str) -> 'list[dict[str,str]]':
+def get_project_pipelines(base_url: str, organization: str, project: str) -> List[Dict[str, str]]:
     url = f'{base_url}/{organization}/{project}/_apis/pipelines?api-version=6.0-preview.1'
     headers = {'Authorization': f'Basic {token}'}
     return requests.request("GET", url, headers=headers, data=payload).json().get('value')
 
 
-def find_pipeline_by_name(pipelines: 'list[dict[str,str]]', name: str):
+def find_pipeline_by_name(pipelines: List[Dict[str, str]], name: str):
     for pipeline in pipelines:
         if pipeline.get('name') == name:
             return pipeline

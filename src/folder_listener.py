@@ -1,8 +1,10 @@
 
 # import the modules
 import time
-from watchdog.observers import Observer
+
 from watchdog.events import RegexMatchingEventHandler
+from watchdog.observers import Observer
+
 from file_handler import file_handler_main
 
 
@@ -15,7 +17,7 @@ def create_event_handler():
     return my_event_handler
 
 
-def start_listener(path):
+def start_listener(path: str):
     event_handler = create_event_handler()
     event_handler.on_created = file_handler_main
 
