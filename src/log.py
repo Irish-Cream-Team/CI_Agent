@@ -1,10 +1,14 @@
 import logging
-from agent import create_folder
-
+import pathlib
+import sys
 
 def config_logger():
-    create_folder('./logs')
+    pathlib.Path('./logs').mkdir(parents=True, exist_ok=True)
+
     FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
 
-    logging.basicConfig(filename=f'./logs/try.log', format=FORMAT)
+    logging.basicConfig( handlers=[
+        logging.FileHandler("./logs/try.log",mode='a'),
+        logging.StreamHandler()],
+        format=FORMAT, level=logging.INFO)
     return logging.getLogger()

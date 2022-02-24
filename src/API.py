@@ -1,29 +1,31 @@
 import json
+
 import requests
+
 from config import config
 from log import config_logger
 
 logger = config_logger()
 payload = {}
 
-token = config["token"]
-url = config["url"]
+token = str(config["token"])
+url = str(config["url"])
 
 
-def get_project_pipelines(base_url, organization, project):
+def get_project_pipelines(base_url: str, organization: str, project: str) -> 'list[dict[str,str]]':
     url = f'{base_url}/{organization}/{project}/_apis/pipelines?api-version=6.0-preview.1'
     headers = {'Authorization': f'Basic {token}'}
     return requests.request("GET", url, headers=headers, data=payload).json().get('value')
 
 
-def find_pipeline_by_name(pipelines, name):
+def find_pipeline_by_name(pipelines: 'list[dict[str,str]]', name: str):
     for pipeline in pipelines:
         if pipeline.get('name') == name:
             return pipeline
     return None
 
 
-def send_azure_run_requset(base_url, organization, project, pipelineId):
+def send_azure_run_requset(base_url: str, organization: str, project: str, pipelineId: str) -> requests.Response:
     payload = json.dumps({
         "resources": {
             "repositories": {
@@ -39,7 +41,7 @@ def send_azure_run_requset(base_url, organization, project, pipelineId):
     return requests.request("POST", url, headers=headers, data=payload)
 
 
-def run_ci_pipline(projectOrganization, projectName):
+def run_ci_pipline(projectOrganization: str, projectName: str) -> None:
     logger.info('start API request process')
     pipelines = get_project_pipelines(url, projectOrganization, projectName)
     pipeline = find_pipeline_by_name(pipelines, 'CI')

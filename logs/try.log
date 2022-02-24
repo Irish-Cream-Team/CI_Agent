@@ -1,0 +1,13 @@
+2022-02-22 15:51:07,369 - INFO - new file detected, start file handler process
+2022-02-22 15:51:07,469 - INFO - File moved successfully to ./Yesodot/TeamName/Halbana/Images/exampleFIie.txt
+2022-02-22 15:51:07,469 - INFO - file handler process finished
+2022-02-22 15:51:07,469 - INFO - start API request process
+2022-02-22 15:51:14,503 - INFO - CI pipeline run successfully
+2022-02-22 15:51:14,504 - INFO - API request process finished
+2022-02-22 20:20:09,400 - INFO - agent is runnig
+2022-02-22 20:20:17,610 - INFO - new file ./Yesodot/Unorganize/exampleFIie.txt detected, start file handler process
+2022-02-22 20:20:17,711 - INFO - File moved successfully to ./Yesodot/TeamName/Halbana/Images/exampleFIie.txt
+2022-02-22 20:20:17,712 - INFO - file handler process finished
+2022-02-22 20:20:17,712 - INFO - start API request process
+2022-02-22 20:20:19,370 - INFO - CI pipeline run successfully
+2022-02-22 20:20:19,371 - INFO - API request process finished

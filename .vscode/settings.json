@@ -1,5 +1,8 @@
 {
-    "cSpell.words": [
-        "listner"
-    ]
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },
+    },
 }
