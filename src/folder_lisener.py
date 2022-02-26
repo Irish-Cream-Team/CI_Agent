@@ -5,7 +5,7 @@ import time
 from watchdog.events import RegexMatchingEventHandler
 from watchdog.observers import Observer
 
-from file_handler import file_handler_main
+from file_handler import FileHandler
 
 
 def create_event_handler():
@@ -17,9 +17,11 @@ def create_event_handler():
     return my_event_handler
 
 
-def start_listener(path: str):
+def start_lisener(path: str,logger,config):
     event_handler = create_event_handler()
-    event_handler.on_created = file_handler_main
+    create_event = event_handler.on_created
+    if create_event is not None:
+        FileHandler(logger, create_event.src, config).file_handler_main()
 
     observer = Observer()
     observer.schedule(event_handler, path, recursive=True)

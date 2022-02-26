@@ -4,55 +4,65 @@ import shutil
 import time
 from typing import Dict
 
-from API import run_ci_pipline
-from log import config_logger
-
-logger = config_logger()
-
-
-def get_file_metadata(file_path: str) -> Dict[str, str]:
-    file_metadata = os.getxattr(file_path, 'user.info').decode("utf-8")
-    return json.loads(file_metadata)
+from api import API
+from config import Config
+from custom_error import *
+from log import Logger
 
 
-def get_file_name(file_path: str) -> str:
-    return os.path.basename(file_path)
+class FileHandler:
+    def __init__(self, logger: Logger, file_path: str, config: Config):
+        self.logger = logger
+        self.file_path = file_path
+        self.metadata = self.get_file_metadata()
+        self.team_name = self.get_teamName()
+        self.azure_project_name = self.get_azureProjectName()
+        self.azure_project_organization = self.get_azureProjectOrganization()
+        self.file_name = self.get_file_name()
+        self.config = config
 
+    def get_file_metadata(self) -> Dict[str, str]:
+        try:
+            file_metadata = os.getxattr(
+                self.file_path, 'user.info').decode("utf-8")
+            return json.loads(file_metadata)
+        except Exception as error:
+            raise FileMetadataError(f'Failed to get file metadata: {error}')
 
-def get_new_file_location(azureProjectName: str, teamName: str, fileName: str) -> str:
-    return f'./Yesodot/{teamName}/{azureProjectName}/Images/{fileName}'
+    def get_file_name(self) -> str:
+        return os.path.basename(self.file_path)
 
+    def get_teamName(self) -> str:
+        return self.metadata['teamName']
 
-def move_file(src_file_path: str, dest_file_path: str):
-    shutil.move(src_file_path, dest_file_path)
-    time.sleep(0.1)
-    if(os.path.isfile(dest_file_path)):
-        logger.info(f'File moved successfully to {dest_file_path}')
-    else:
-        logger.critical(f'File failed to move to {dest_file_path}')
+    def get_azureProjectName(self) -> str:
+        return self.metadata['azureProjectName']
 
+    def get_azureProjectOrganization(self) -> str:
+        return self.metadata['AzureProjectOrganization']
 
-def file_handler_main(event):
-    logger.info(
-        f'new file {event.src_path} detected, start file handler process')
+    def get_dest_path(self) -> str:
+        return f'./Yesodot/{self.team_name}/{self.azure_project_name}/Images/{self.file_name}'
 
-    try:
-        file_metadata = get_file_metadata(event.src_path)
+    def check_file_moved(self) -> bool:
+        if(os.path.isfile(self.get_dest_path())):
+            self.logger.info(f'File moved successfully to {self.file_path}')
+            return True
+        else:
+            raise MoveFileError(f'File failed to move to {self.file_path}')
 
-        azure_project_name = file_metadata.get('AzureProjectName')
-        azure_project_organization = file_metadata.get(
-            'AzureProjectOrganization')
-        team_name = file_metadata.get('TeamName')
-    except Exception as e:
-        logger.critical(f'Failed to get file metadata: {e}')
-        logger.critical(f'Exit file_handler process')
-        return
+    def move_file(self):
+        shutil.move(self.file_path, self.get_dest_path())
+        time.sleep(0.1)
+        self.check_file_moved()
+        self.file_path = self.get_dest_path()
 
-    file_name = get_file_name(event.src_path)
-    new_file_location = get_new_file_location(
-        azure_project_name, team_name, file_name)
+    def file_handler_main(self):
+        self.logger.info(
+            f'new file {self.file_path} detected, start file handler process')
 
-    move_file(event.src_path, new_file_location)
-    logger.info('file handler process finished')
-    run_ci_pipline(azure_project_organization, azure_project_name)
-    return
+        self.move_file()
+        self.logger.info('file handler process finished')
+        api = API(self.azure_project_organization,
+                  self.azure_project_name, self.config, self.logger)
+        api.run_ci_pipline()
