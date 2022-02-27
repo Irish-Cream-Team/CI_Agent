@@ -58,3 +58,10 @@ class FileMetadataError(Exception):
     Custom error class for file metadata errors.
     """
     pass
+
+class FileMetadataNotFound(FileMetadataError):
+    """
+    Custom error class for file metadata errors.
+    """
+    pass
+  

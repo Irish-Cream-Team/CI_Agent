@@ -4,7 +4,7 @@ from typing import Dict
 from dotenv import load_dotenv
 
 from custom_error import *
-from api import API
+# from api import API
 
 
 class Config:
@@ -73,8 +73,8 @@ class Config:
             raise MissingConfigurationError(
                 f"Missing configuration keys: {', '.join(missing_keys)}")
 
-        if (API.check_url(self.get_azure_url()) is False):
-            raise AzureUrlError(
-                f"Invalid Azure URL: {self.get_azure_url()}")
+        # if (API.check_url(self.get_azure_url()) is False):
+        #     raise AzureUrlError(
+        #         f"Invalid Azure URL: {self.get_azure_url()}")
 
         return config

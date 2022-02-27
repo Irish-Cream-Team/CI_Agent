@@ -33,13 +33,24 @@ class FileHandler:
         return os.path.basename(self.file_path)
 
     def get_teamName(self) -> str:
-        return self.metadata['teamName']
+        try:
+            return self.metadata['teamName']
+
+        except Exception as error:
+            raise FileMetadataNotFound(f'required metadata not found: {error}')
 
     def get_azureProjectName(self) -> str:
-        return self.metadata['azureProjectName']
+        try:
+            return self.metadata['azureProjectName']
+
+        except Exception as error:
+            raise FileMetadataNotFound(f'required metadata not found: {error}')
 
     def get_azureProjectOrganization(self) -> str:
-        return self.metadata['AzureProjectOrganization']
+        try:
+            return self.metadata['AzureProjectOrganization']
+        except Exception as error:
+            raise FileMetadataNotFound(f'required metadata not found: {error}')
 
     def get_dest_path(self) -> str:
         return f'./Yesodot/{self.team_name}/{self.azure_project_name}/Images/{self.file_name}'
@@ -51,18 +62,8 @@ class FileHandler:
         else:
             raise MoveFileError(f'File failed to move to {self.file_path}')
 
-    def move_file(self):
-        shutil.move(self.file_path, self.get_dest_path())
+    def move_file(self, dest_path):
+        shutil.move(self.file_path, dest_path)
         time.sleep(0.1)
         self.check_file_moved()
         self.file_path = self.get_dest_path()
-
-    def file_handler_main(self):
-        self.logger.info(
-            f'new file {self.file_path} detected, start file handler process')
-
-        self.move_file()
-        self.logger.info('file handler process finished')
-        api = API(self.azure_project_organization,
-                  self.azure_project_name, self.config, self.logger)
-        api.run_ci_pipline()

@@ -150,12 +150,12 @@ class API:
         else:
             raise APIError('API request failed')
 
-    @staticmethod
-    def check_url(url: str) -> bool:
-        """
-        Check if the URL is valid.
-        :param url: URL.
-        :return: True if valid, False if not.
-        """
-        status_code = requests.head(url).status_code
-        return status_code == 200
+    # @staticmethod
+    # def check_url(url: str) -> bool:
+    #     """
+    #     Check if the URL is valid.
+    #     :param url: URL.
+    #     :return: True if valid, False if not.
+    #     """
+    #     status_code = requests.head(url).status_code
+    #     return status_code == 200

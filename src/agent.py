@@ -1,9 +1,11 @@
 import os
 import time
 
+from api import API
 from config import Config
 from custom_error import *
-from folder_lisener import start_lisener
+from file_handler import FileHandler
+from folder_lisener import FolderLisenenr
 from log import Logger
 
 
@@ -18,7 +20,6 @@ class Agent:
         self.setup_Agent()
 
         self.logger.info('Agent started')
-        start_lisener(self.config.get_input_folder(), self.logger, self.config)
 
     def setup_Agent(self):
         """
@@ -37,6 +38,22 @@ class Agent:
 
         self.logger.info('Agent setup complete')
 
+    def main(self):
+        is_running = True
+        while is_running:
+            lisener = FolderLisenenr()
+            file_path = lisener.start_lisener(self.config.get_input_folder())
+
+            self.logger.info(
+                f'new file {file_path} detected, start file handler process')
+            new_file = FileHandler(self.logger, file_path, self.config)
+            new_file.move_file(new_file.get_dest_path())
+            self.logger.info('file handler process finished')
+
+            api = API(new_file.get_azureProjectOrganization(),
+                      new_file.get_azureProjectName(), self.config, self.logger)
+            api.run_ci_pipline()
+
     @staticmethod
     def create_folder(folder_path: str):
         if not os.path.exists(folder_path):
@@ -46,3 +63,4 @@ class Agent:
 
 if __name__ == "__main__":
     agent = Agent()
+    agent.main()
