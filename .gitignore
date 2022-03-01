@@ -1,5 +1,8 @@
 .env
 .vscode/*
 **/__pycache__/
-agent_venv/**
+*agent*/**
+agentvenv/
 logs/**
+*.iml
+*.pyc
