@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "inon": {
+      "hb_profile": null,
+      "stream_input_folder": "example_folder",
+      "stream_output_folder": null
+    }
+  }
+}
