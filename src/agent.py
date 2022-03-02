@@ -2,11 +2,19 @@ import os
 import time
 
 from api import API
-from config import Config
+from config import *
 from custom_error import *
 from file_handler import FileHandler
 from folder_lisener import FolderLisenenr
 from log import Logger
+
+"""
+todo:
+    # - static config,
+    # - private functions,
+    - add file lisenenr
+    
+"""
 
 
 class Agent:
@@ -16,7 +24,7 @@ class Agent:
         Initializes the Agent class.
         """
         self.logger: Logger
-        self.config: Config
+        self.config: Dict[str, str]
         self.setup_Agent()
 
         self.logger.info('Agent started')
@@ -28,10 +36,10 @@ class Agent:
         try:
             self.logger = Logger()
             self.logger.info('Setting up Agent')
-            self.config = Config()
+            self.config = Config.get_config()
 
-        except MissingConfigurationError as error:
-            self.logger.throw_critical_error(error)
+        except Exception as error:
+            self.logger.critical(f'Error: {error}')
             self.logger.critical(
                 'Agent failed to setup. This is critical error, exiting program')
             exit(1)
@@ -42,10 +50,12 @@ class Agent:
         is_running = True
         while is_running:
             lisener = FolderLisenenr()
-            file_path = lisener.start_lisener(self.config.get_input_folder())
+            file_path = lisener.start_lisener(
+                Config.get_input_folder(self.config))
 
             self.logger.info(
                 f'new file {file_path} detected, start file handler process')
+
             new_file = FileHandler(self.logger, file_path, self.config)
             new_file.move_file(new_file.get_dest_path())
             self.logger.info('file handler process finished')

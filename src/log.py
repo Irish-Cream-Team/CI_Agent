@@ -54,9 +54,3 @@ class Logger:
         :param message: Message to log."""
         self.logger.critical(message)
 
-    def throw_critical_error(self, error) -> None:
-        """
-        Logs an error message and throws an exception.
-        :param error: Error to log and throw.
-        """
-        self.critical(str(error))
