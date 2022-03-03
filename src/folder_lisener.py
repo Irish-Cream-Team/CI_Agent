@@ -1,41 +1,40 @@
-
-# import the modules
-import time
-
-from watchdog.events import RegexMatchingEventHandler
-from watchdog.observers import Observer
+from file import File
+import os
+from typing import List
 
 
 class FolderLisenenr:
 
-    def __init__(self) -> None:
-        self.event = None
+    @staticmethod
+    def listen(path: str) -> List[File]:
+        files = []
+        for dir_entry in os.scandir(path):
+            if(dir_entry.is_file()):
+                files.append(File.from_dir_entry(dir_entry))
+        if (FolderLisenenr.is_updated(path, files)):
+            new_files = FolderLisenenr.find_new_files(path, files)
+        return new_files
 
-    def create_event_handler(self):
-        # create the event handler
-        ignore_directories = False
-        case_sensitive = True
-        my_event_handler = RegexMatchingEventHandler(ignore_directories=ignore_directories,
-                                                     case_sensitive=case_sensitive)
-        return my_event_handlerit
+    @staticmethod
+    def is_updated(path: str, files: List[File]):
+        for dir_entry in os.scandir(path):
+            if(dir_entry.is_file()):
+                for file in files:
+                    if(file.is_updated(dir_entry)):
+                        return True
+        return False
 
-    def start_lisener(self, path: str) -> str:
-        event_handler = self.create_event_handler()
-        event_handler.on_created = self.on_create
-        if self.event is not None:
-            return self.event
-        observer = Observer()
-        observer.schedule(event_handler, path, recursive=True)
+    @staticmethod
+    def get_folder_files(path: str) -> List[File]:
+        files = []
+        for dir_entry in os.scandir(path):
+            if(dir_entry.is_file()):
+                files.append(File.from_dir_entry(dir_entry))
+        return files
 
-        # Start the observer
-        observer.start()
-        try:
-            while True:
-                # Set the thread sleep time
-                time.sleep(1)
-        except KeyboardInterrupt:
-            observer.stop()
-        observer.join()
-
-    def on_create(self, event):
-        self.event = event
+    @staticmethod
+    def find_file_by_name(name: str, files: List[File]) -> File:
+        for file in files:
+            if(file.get_name() == name):
+                return file
+        return None

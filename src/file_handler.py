@@ -4,14 +4,14 @@ import shutil
 import time
 from typing import Dict
 
-from api import API
-from config import Config
 from custom_error import *
 from log import Logger
+from file import File
 
 
-class FileHandler:
+class FileHandler(File):
     def __init__(self, logger: Logger, file_path: str, config: Dict[str, str]):
+        # super().__init__())
         self.logger = logger
         self.file_path = file_path
         self.metadata = self._get_file_metadata()
@@ -62,7 +62,7 @@ class FileHandler:
         else:
             raise MoveFileError(f'File failed to move to {self.file_path}')
 
-    def move_file(self, dest_path:str):
+    def move_file(self, dest_path: str):
         shutil.move(self.file_path, dest_path)
         time.sleep(0.1)
         self._check_file_moved()

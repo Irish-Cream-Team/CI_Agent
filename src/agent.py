@@ -49,14 +49,18 @@ class Agent:
     def main(self):
         is_running = True
         while is_running:
-            lisener = FolderLisenenr()
-            file_path = lisener.start_lisener(
-                Config.get_input_folder(self.config))
+            files = FolderLisenenr.listen(self.config['path'])
+            for file in files:
+                folder_files = FolderLisenenr.get_folder_files(
+                    self.config['path'])
+                if (not file.is_updated(FolderLisenenr.find_file_by_name(file.get_name(), folder_files))):
+                    new_file_ob = file
 
             self.logger.info(
-                f'new file {file_path} detected, start file handler process')
+                f'new file {new_file_ob.get_name()} detected, start file handler process')
 
-            new_file = FileHandler(self.logger, file_path, self.config)
+            new_file = FileHandler(
+                self.logger, new_file_ob.get_path(), self.config)
             new_file.move_file(new_file.get_dest_path())
             self.logger.info('file handler process finished')
 
