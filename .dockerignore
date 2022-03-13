@@ -3,4 +3,5 @@ agent_venv/*
 *ocker*
 *.yaml
 /logs/*
-Yesodot/*
+# Yesodot/*
+test/*

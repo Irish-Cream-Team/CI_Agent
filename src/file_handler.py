@@ -7,41 +7,44 @@ from typing import Dict
 from custom_error import *
 from log import Logger
 from file import File
+from config import Config
 
 
 class FileHandler(File):
     def __init__(self, logger: Logger, file_path: str, config: Dict[str, str]):
-        # super().__init__())
+
         self.logger = logger
         self.file_path = file_path
+        self.file_name = self._get_file_name()
+        self.config = config
+
         self.metadata = self._get_file_metadata()
         self.team_name = self._get_teamName()
         self.azure_project_name = self.get_azureProjectName()
         self.azure_project_organization = self.get_azureProjectOrganization()
-        self.file_name = self._get_file_name()
-        self.config = config
 
     def _get_file_metadata(self) -> Dict[str, str]:
         try:
-            file_metadata = os.getxattr(
-                self.file_path, 'user.info').decode("utf-8")
-            return json.loads(file_metadata)
+            team_name = self._get_file_name().split('_')[1]
+            file_metadata = Config.get_teamInfo(team_name)
+
+            return file_metadata
         except Exception as error:
             raise FileMetadataError(f'Failed to get file metadata: {error}')
 
     def _get_file_name(self) -> str:
-        return os.path.basename(self.file_path)
+        return os.path.basename(self.file_path).split('.')[0]
 
     def _get_teamName(self) -> str:
         try:
-            return self.metadata['teamName']
+            return self.metadata['TeamName']
 
         except Exception as error:
             raise FileMetadataNotFound(f'required metadata not found: {error}')
 
     def get_azureProjectName(self) -> str:
         try:
-            return self.metadata['azureProjectName']
+            return self.metadata['AzureProjectName']
 
         except Exception as error:
             raise FileMetadataNotFound(f'required metadata not found: {error}')

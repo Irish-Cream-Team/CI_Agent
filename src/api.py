@@ -29,9 +29,8 @@ class API:
         Get the project pipelines. 
         :return: List of pipelines.
         """
-        url = f'{self.__get_project_pipelines_url}{self._get_api_version()}'
+        url = f'{self.__get_project_pipelines_url()}{self._get_api_version()}'
         headers = {'Authorization': f'Basic {self.azure_token}'}
-
         return requests.request("GET", url, headers=headers, data={}).json().get('value')
 
     def _find_pipeline_by_name(self, name: str) -> Dict[str, str]:
@@ -136,8 +135,7 @@ class API:
         url = self.__get_project_pipeline_runs_url(pipeline_id)
         headers = self._create_headers()
         payload = self._create_payload()
-
-        return requests.request("POST", url, headers=headers, data=payload).json()
+        return requests.request("POST", url, headers=headers, data=payload)
 
     def run_ci_pipline(self) -> None:
         """

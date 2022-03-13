@@ -6,3 +6,5 @@ agentvenv/
 logs/**
 *.iml
 *.pyc
+/test/
+*__pycache__*

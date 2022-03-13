@@ -4,6 +4,7 @@ from typing import Dict
 from dotenv import load_dotenv
 
 from custom_error import *
+import json
 
 
 class Config:
@@ -21,7 +22,7 @@ class Config:
         config = {}
         for key, value in os.environ.items():
             config[key] = value
-        
+
         Config.verify_config(config)
         return config
 
@@ -74,3 +75,13 @@ class Config:
             raise MissingConfigurationError(
                 f"Missing configuration keys: {', '.join(missing_keys)}")
         return config
+
+    @staticmethod
+    def get_teamInfo(team_name:str) -> Dict[str, str]:
+        """
+        Load teamInfo from json file.
+        :return: teamInfo as a dictionary.
+        """
+        with open('teamInfo.json') as json_file:
+            teamInfo = json.load(json_file)
+        return teamInfo[team_name]
