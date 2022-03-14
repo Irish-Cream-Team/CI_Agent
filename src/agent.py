@@ -1,6 +1,7 @@
 import os
 import time
 
+from typing import Dict
 from config import Config
 from custom_error import *
 from folder_lisener import FolderLisenenr
@@ -44,6 +45,7 @@ class Agent:
         while is_running:
             lisener = FolderLisenenr(Config.get_input_folder(self.config))
             new_files = lisener.listen()
+            print(new_files)
             if new_files:
                 for file in new_files:
                     self.logger.info(

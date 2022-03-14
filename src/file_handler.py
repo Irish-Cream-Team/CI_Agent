@@ -16,6 +16,7 @@ class FileHandler(File):
         self.logger = logger
         self.file_path = file_path
         self.file_name = self._get_file_name()
+        self.file_full_name = self._get_file_full_name()
         self.config = config
 
         self.metadata = self._get_file_metadata()
@@ -34,6 +35,9 @@ class FileHandler(File):
 
     def _get_file_name(self) -> str:
         return os.path.basename(self.file_path).split('.')[0]
+
+    def _get_file_full_name(self) -> str:
+        return os.path.basename(self.file_path)
 
     def _get_teamName(self) -> str:
         try:
@@ -56,7 +60,7 @@ class FileHandler(File):
             raise FileMetadataNotFound(f'required metadata not found: {error}')
 
     def get_dest_path(self) -> str:
-        return f'./Yesodot/{self.team_name}/{self.azure_project_name}/Images/{self.file_name}'
+        return f'./Yesodot/{self.team_name}/{self.azure_project_name}/Images/{self.file_full_name}'
 
     def _check_file_moved(self) -> bool:
         if(os.path.isfile(self.get_dest_path())):
@@ -66,6 +70,7 @@ class FileHandler(File):
             raise MoveFileError(f'File failed to move to {self.file_path}')
 
     def move_file(self, dest_path: str):
+        print(f'move file func {self.file_path}')
         shutil.move(self.file_path, dest_path)
         time.sleep(0.1)
         self._check_file_moved()
