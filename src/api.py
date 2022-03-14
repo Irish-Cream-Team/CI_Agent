@@ -5,7 +5,7 @@ import requests
 
 from config import *
 from custom_error import *
-from log import Logger
+from logger import Logger
 
 
 class API:

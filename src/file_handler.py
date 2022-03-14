@@ -5,7 +5,7 @@ import time
 from typing import Dict
 
 from custom_error import *
-from log import Logger
+from logger import Logger
 from file import File
 from config import Config
 

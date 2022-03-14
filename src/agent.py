@@ -1,10 +1,10 @@
 import os
-import time 
+import time
 
-from config import *
+from config import Config
 from custom_error import *
 from folder_lisener import FolderLisenenr
-from log import Logger
+from logger import Logger
 from api import API
 from file_handler import FileHandler
 
@@ -12,7 +12,6 @@ from file_handler import FileHandler
 class Agent:
 
     def __init__(self):
-        
         """
         Initializes the Agent class.
         """
@@ -65,6 +64,7 @@ class Agent:
                     except Exception as error:
                         self.logger.error(
                             f'{file.get_name()} has unknown error, file will be ignored {error}')
+
     @staticmethod
     def create_folder(folder_path: str):
         if not os.path.exists(folder_path):
