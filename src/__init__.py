@@ -1,4 +1,4 @@
-from .agent import Agent
+from Ci_Agent.src.agent import Agent
 from .api import API
 from .config import Config
 from .custom_error import *
