@@ -1,0 +1,8 @@
+version: "3"
+services:
+  ci-agent:
+    build: .
+    env_file:
+      - .env
+    volumes: 
+      - "./Yesodot/:/app/Yesodot"

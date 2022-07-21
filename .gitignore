@@ -1,0 +1,10 @@
+.env
+.vscode/*
+**/__pycache__/
+*agent*/**
+agentvenv/
+logs/**
+*.iml
+*.pyc
+/test/
+*__pycache__*

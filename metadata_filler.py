@@ -1,11 +1,13 @@
 import os
 import json
-path = '/home/ofek/Documents/aramy/Inside_CI/Yesodot/TeamName/ProjectName/Images'
-projectName = 'Halbana'
-projectOrganization = 'yesodot'
-filePath = 'foo.txt'
-info = {'path': path, 'projectName': projectName,
-        'projectOrganization': projectOrganization}
+TeamName = 'TeamName'
+AzureProjectName = 'Halbana'
+AzureProjectOrganization = 'yesodot'
+
+filePath = '/home/ofek/Documents/CI_Agent/test/bigGoodFile.txt'
+info = {'TeamName': TeamName,
+        'AzureProjectName': AzureProjectName,
+        'AzureProjectOrganization': AzureProjectOrganization}
 
 
 def dict_to_binary(dict):
@@ -13,9 +15,7 @@ def dict_to_binary(dict):
     return str.encode('utf-8')
 
 
-
-
-os.setxattr('foo.txt', 'user.info', dict_to_binary(info))
+os.setxattr(filePath, 'user.info', dict_to_binary(info))
 
 info = os.getxattr(filePath, 'user.info').decode("utf-8")
 
